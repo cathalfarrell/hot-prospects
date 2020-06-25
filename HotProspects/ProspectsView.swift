@@ -21,6 +21,7 @@ struct ProspectsView: View {
     @EnvironmentObject var prospects: Prospects
 
     @State private var isShowingScanner = false
+    @State private var isShowingFilters = false
 
     var title: String {
         switch filter {
@@ -88,7 +89,13 @@ struct ProspectsView: View {
                     }
                 }
                 .navigationBarTitle(title)
-                .navigationBarItems(trailing: Button(action: {
+                .navigationBarItems(leading: Button(action: {
+                    self.isShowingFilters = true
+                }) {
+                    Image(systemName: "arrow.up.arrow.down.square")
+                    Text("Sort")
+                },
+                trailing: Button(action: {
                     self.isShowingScanner = true
                 }) {
                     Image(systemName: "qrcode.viewfinder")
@@ -99,6 +106,16 @@ struct ProspectsView: View {
             .sheet(isPresented: $isShowingScanner) {
                 CodeScannerView(codeTypes: [.qr], simulatedData: self.simulatedData, completion: self.handleScan)
             }
+                /*
+                 Challenge 3 - Use an action sheet to customize the way users are sorted in each screen – by name
+                */
+            .actionSheet(isPresented: $isShowingFilters) {
+                ActionSheet(title: Text("Sort Contacts By"), buttons: [ .default(Text("Name"), action: {
+                    self.prospects.sortByUserName()
+                }),
+                .cancel()])
+            }
+
         }
 
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {

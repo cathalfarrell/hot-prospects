@@ -8,11 +8,23 @@
 
 import Foundation
 
-class Prospect: Identifiable, Codable {
+class Prospect: Identifiable, Codable, Comparable {
+
     let id = UUID()
     var name = "Anonymous"
     var emailAddress = ""
     fileprivate(set) var isContacted = false
+
+    static func == (lhs: Prospect, rhs: Prospect) -> Bool {
+        lhs.name == rhs.name
+        && lhs.id == rhs.id
+        && lhs.emailAddress == rhs.emailAddress
+        && lhs.isContacted == rhs.isContacted
+    }
+
+    static func < (lhs: Prospect, rhs: Prospect) -> Bool {
+        lhs.name < rhs.name
+    }
 }
 
 class Prospects: ObservableObject {
@@ -84,6 +96,12 @@ class Prospects: ObservableObject {
         objectWillChange.send() //sends notification that an item will changed - so UI updates
         prospect.isContacted.toggle()
         //saveToUserDefaults()
+        saveData()
+    }
+
+    func sortByUserName() {
+        print("Sorting by username")
+        self.people = self.people.sorted()
         saveData()
     }
 }
