@@ -55,13 +55,23 @@ struct ProspectsView: View {
         return arrayOfSamples[randomIndex]
     }
 
+    let systemImageContacted = "person.crop.circle.fill.badge.checkmark"
+    let systemImageUncontacted = "person.crop.circle.badge.xmark"
+
     var body: some View {
             NavigationView {
                 List {
                     ForEach(filteredProspects) { prospect in
                         VStack(alignment: .leading) {
-                            Text(prospect.name)
-                                .font(.headline)
+                            HStack{
+                                Text(prospect.name)
+                                    .font(.headline)
+                                // Challenge 1 - Add an icon to the “Everyone” screen showing
+                                // whether a prospect was contacted or not.
+                                Spacer()
+                                Image(systemName: prospect.isContacted ?
+                                    self.systemImageContacted : self.systemImageUncontacted)
+                            }
                             Text(prospect.emailAddress)
                                 .foregroundColor(.secondary)
                         }
